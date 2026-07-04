@@ -1,0 +1,16 @@
+*.swo
+*.swp
+*.claude
+
+CLAUDE.local.md
+
+PR-Description.md
+
+Backlog.md
+Backlogs.md
+
+Comment.md
+Comments.md
+
+Snippet.md
+Snippets.md
