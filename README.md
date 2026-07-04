@@ -46,7 +46,7 @@ nvm use --lts
 ### npm Global Packages
 
 ```bash
-npm install -g corepack dts-generator http-server jsdoc-to-markdown jsdoc pdf2json prettier typescript yarn
+npm install -g @anthropic-ai/claude-code corepack dts-generator http-server jsdoc-to-markdown jsdoc pdf2json prettier typescript yarn
 ```
 
 | NAME     | VERSION |
@@ -122,6 +122,7 @@ The color theme (`tmux-colors/cg-theme.tmux`) is automatically sourced by `tmux.
 ```bash
 cat ~/bashrc-cg/prettier.cgf > ~/.prettierrc
 cat ~/bashrc-cg/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
+cat ~/bashrc-cg/claude.cgf > ~/.claude/CLAUDE.md
 ```
 
 ## Shell Scripts
