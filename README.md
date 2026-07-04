@@ -28,7 +28,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/HEAD/install.sh | bash
 ### Homebrew Packages
 
 ```bash
-brew install ghostty ripgrep neovim tmux jq
+brew install ghostty ripgrep neovim tmux jq tig bat
 ```
 
 | NAME    | VERSION |
