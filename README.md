@@ -123,6 +123,8 @@ The color theme (`tmux-colors/cg-theme.tmux`) is automatically sourced by `tmux.
 cat ~/bashrc-cg/prettier.cgf > ~/.prettierrc
 cat ~/bashrc-cg/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
 cat ~/bashrc-cg/claude.cgf > ~/.claude/CLAUDE.md
+cat ~/bashrc-cg/gitignore-global.cgf > ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
 ```
 
 ## Shell Scripts
