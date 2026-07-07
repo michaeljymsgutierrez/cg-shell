@@ -122,10 +122,18 @@ The color theme (`tmux-colors/cg-theme.tmux`) is automatically sourced by `tmux.
 ```bash
 cat ~/bashrc-cg/prettier.cgf > ~/.prettierrc
 cat ~/bashrc-cg/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
-cat ~/bashrc-cg/claude.cgf > ~/.claude/CLAUDE.md
 cat ~/bashrc-cg/gitignore-global.cgf > ~/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
 ```
+
+### 9. Claude Code Config
+
+```bash
+git clone https://github.com/michaeljymsgutierrez/cg-claude ~/cg-claude
+cd ~/cg-claude && ./pull.sh
+```
+
+`pull.sh` copies `CLAUDE.md`, `skills/`, and `plugins/known_marketplaces.json` from the repo into `~/.claude/`. Run `./push.sh` to sync changes back to the repo.
 
 ## Shell Scripts
 
