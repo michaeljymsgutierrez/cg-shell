@@ -60,7 +60,7 @@ Steps to configure Zsh, Ghostty, Neovim, Lazy, Prettier, and Tmux.
 ### 1. Clone the Configuration Repository
 
 ```bash
-cd ~/ && git clone git@github.com:michaeljymsgutierrez/bashrc-cg.git
+git clone https://github.com/michaeljymsgutierrez/bashrc-cg ~/bashrc-cg
 ```
 
 ### 2. Install Fonts
