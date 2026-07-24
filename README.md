@@ -36,6 +36,14 @@ brew install ghostty ripgrep neovim tmux jq tig bat
 | ghostty |   1.2.0 |
 | tmux    |     3.4 |
 
+### superfile (spf)
+
+TUI file manager. Requires a tap:
+
+```bash
+brew tap mhnightcat/superfile https://github.com/MHNightCat/homebrew-superfile.git && brew install superfile
+```
+
 ### Node
 
 ```bash
@@ -124,7 +132,10 @@ cat ~/bashrc-cg/prettier.cgf > ~/.prettierrc
 cat ~/bashrc-cg/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
 cat ~/bashrc-cg/gitignore-global.cgf > ~/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
+cat ~/bashrc-cg/superfile.cgf > ~/Library/Application\ Support/superfile/config.toml
 ```
+
+> superfile generates its config on first launch. Run `spf` once (then quit with `q`) before applying `superfile.cgf`. The `monokai` theme is built in, and `transparent_background` lets the tmux/terminal background show through.
 
 ### 9. Claude Code Config
 
