@@ -27,6 +27,14 @@ export PATH="$HOME/.local/bin:$PATH"
 # OPENCODE HOME
 export PATH="$HOME/.opencode/bin:$PATH"
 
+
+# PNPM HOME
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
 # GO
 #export PATH=$PATH:/usr/local/go/bin
 
