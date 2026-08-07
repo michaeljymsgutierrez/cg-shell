@@ -1,16 +1,20 @@
+# Editor swap files
 *.swo
 *.swp
-*.claude
 
+# Claude Code local state
+.claude
 CLAUDE.local.md
 
+# Astrid skill artifacts - one fixed filename per skill output.
+# See the skills in ~/.claude/skills/ and the rules in ~/.claude/CLAUDE.md.
 PR-Description.md
-
 Backlog.md
-Backlogs.md
-
+Reviews.md
 Comment.md
-Comments.md
-
-Snippet.md
-Snippets.md
+Issue.md
+Issue-*.md
+Code-Review.md
+Handoff.md
+Replicate.md
+Verify.md
