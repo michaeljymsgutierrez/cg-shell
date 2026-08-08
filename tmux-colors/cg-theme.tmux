@@ -20,25 +20,25 @@ set -g status-left-style NONE
 set -g status-right-style NONE
 
 # Section contents
-display_time='#(bash -c ~/bashrc-cg/shellscripts/time.sh)'
-display_date='#(bash -c ~/bashrc-cg/shellscripts/date.sh)'
+display_time='#(bash -c ~/cg-shell/shellscripts/time.sh)'
+display_date='#(bash -c ~/cg-shell/shellscripts/date.sh)'
 display_datetime="$display_time $display_date"
-display_system_notification_count='#(bash -c ~/bashrc-cg/shellscripts/system-notification-count.sh)'
-display_calendar_notification_count='#(bash -c ~/bashrc-cg/shellscripts/calendar-notification-count.sh)'
-display_mail_notification_count='#(bash -c ~/bashrc-cg/shellscripts/mail-notification-count.sh)'
-display_discord_notification_count='#(bash -c ~/bashrc-cg/shellscripts/discord-notification.sh)'
-display_slack_notification_count='#(bash -c ~/bashrc-cg/shellscripts/slack-notification-count.sh)'
-display_battery_status='#(bash -c ~/bashrc-cg/shellscripts/battery.sh)'
-display_network_status='#(bash -c ~/bashrc-cg/shellscripts/network.sh)'
-display_earth_status='#(bash -c ~/bashrc-cg/shellscripts/earth.sh)'
-display_cpu_status='#(bash -c ~/bashrc-cg/shellscripts/cpu.sh)'
-display_memory_status='#(bash -c ~/bashrc-cg/shellscripts/memory.sh)'
+display_system_notification_count='#(bash -c ~/cg-shell/shellscripts/system-notification-count.sh)'
+display_calendar_notification_count='#(bash -c ~/cg-shell/shellscripts/calendar-notification-count.sh)'
+display_mail_notification_count='#(bash -c ~/cg-shell/shellscripts/mail-notification-count.sh)'
+display_discord_notification_count='#(bash -c ~/cg-shell/shellscripts/discord-notification.sh)'
+display_slack_notification_count='#(bash -c ~/cg-shell/shellscripts/slack-notification-count.sh)'
+display_battery_status='#(bash -c ~/cg-shell/shellscripts/battery.sh)'
+display_network_status='#(bash -c ~/cg-shell/shellscripts/network.sh)'
+display_earth_status='#(bash -c ~/cg-shell/shellscripts/earth.sh)'
+display_cpu_status='#(bash -c ~/cg-shell/shellscripts/cpu.sh)'
+display_memory_status='#(bash -c ~/cg-shell/shellscripts/memory.sh)'
 
 display_left_section_content="$display_network_status "
 display_right_section_content="$display_mail_notification_count $display_calendar_notification_count $display_slack_notification_count $display_discord_notification_count $display_cpu_status $display_memory_status $display_battery_status $display_earth_status $display_datetime $display_system_notification_count"
 
 
-window_name="#(bash -c '~/bashrc-cg/shellscripts/iconize-string.sh #W')"
+window_name="#(bash -c '~/cg-shell/shellscripts/iconize-string.sh #W')"
 
 display_left_section="$display_left_section_content"
 display_right_section="$display_right_section_content"

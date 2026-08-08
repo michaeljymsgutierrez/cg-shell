@@ -1,4 +1,4 @@
-# bashrc-cg
+# cg-shell
 
 Personal dev environment configuration for macOS - Zsh, Ghostty, Neovim, Tmux, and supporting shell scripts.
 
@@ -60,7 +60,7 @@ Steps to configure Zsh, Ghostty, Neovim, Lazy, Prettier, and Tmux.
 ### 1. Clone the Configuration Repository
 
 ```bash
-git clone https://github.com/michaeljymsgutierrez/bashrc-cg ~/bashrc-cg
+git clone https://github.com/michaeljymsgutierrez/cg-shell ~/cg-shell
 ```
 
 ### 2. Install Fonts
@@ -68,7 +68,7 @@ git clone https://github.com/michaeljymsgutierrez/bashrc-cg ~/bashrc-cg
 Required for Ghostty and Neovim icons to render correctly.
 
 ```bash
-cp ~/bashrc-cg/fonts/*.ttf ~/Library/Fonts/
+cp ~/cg-shell/fonts/*.ttf ~/Library/Fonts/
 ```
 
 ### 3. Install fzf (Optional)
@@ -82,9 +82,9 @@ brew install fzf
 Add to `~/.zshrc`:
 
 ```bash
-source ~/bashrc-cg/path.cgf
-source ~/bashrc-cg/prompt.cgf
-source ~/bashrc-cg/alias.cgf
+source ~/cg-shell/path.cgf
+source ~/cg-shell/prompt.cgf
+source ~/cg-shell/alias.cgf
 ```
 
 ### 5. Configure Ghostty
@@ -92,7 +92,7 @@ source ~/bashrc-cg/alias.cgf
 Add to `~/.config/ghostty/config`:
 
 ```bash
-config-file = "~/bashrc-cg/ghostty.cgf"
+config-file = "~/cg-shell/ghostty.cgf"
 ```
 
 Custom GLSL shaders are available in `shaders/`. To enable one, uncomment the relevant `custom-shader` line in `ghostty.cgf`.
@@ -102,7 +102,7 @@ Custom GLSL shaders are available in `shaders/`. To enable one, uncomment the re
 Add to `~/.config/nvim/init.lua`:
 
 ```lua
-local homeDirectory = os.getenv('HOME') .. '/bashrc-cg/nvim-cgf.lua'
+local homeDirectory = os.getenv('HOME') .. '/cg-shell/nvim-cgf.lua'
 local initNvimConfig = loadfile(homeDirectory)
 if initNvimConfig then initNvimConfig() end
 ```
@@ -112,7 +112,7 @@ if initNvimConfig then initNvimConfig() end
 Add to `~/.tmux.conf`:
 
 ```bash
-source ~/bashrc-cg/tmux.cgf
+source ~/cg-shell/tmux.cgf
 ```
 
 The color theme (`tmux-colors/cg-theme.tmux`) is automatically sourced by `tmux.cgf` - no extra step needed.
@@ -120,9 +120,9 @@ The color theme (`tmux-colors/cg-theme.tmux`) is automatically sourced by `tmux.
 ### 8. Global Tooling Configs
 
 ```bash
-cat ~/bashrc-cg/prettier.cgf > ~/.prettierrc
-cat ~/bashrc-cg/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
-cat ~/bashrc-cg/gitignore-global.cgf > ~/.gitignore_global
+cat ~/cg-shell/prettier.cgf > ~/.prettierrc
+cat ~/cg-shell/lazy-lock.cgf > ~/.config/nvim/lazy-lock.json
+cat ~/cg-shell/gitignore-global.cgf > ~/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
 ```
 
