@@ -1,45 +1,12 @@
 #!/bin/bash
+# Current time as glyphs: HH⋅MM followed by the AM/PM marker.
 
-icons[0]="󰬹"
-icons[1]="󰬺"
-icons[2]="󰬻"
-icons[3]="󰬼"
-icons[4]="󰬽"
-icons[5]="󰬾"
-icons[6]="󰬿"
-icons[7]="󰭀"
-icons[8]="󰭁"
-icons[9]="󰭂"
+source "${BASH_SOURCE[0]%/*}/lib/icons.sh"
 
-time_hours=$(date +"%I")
-time_minutes=$(date +"%M")
-time_period=$(date +"%p")
-
-hours=""
-minutes=""
-time_string=""
-
-for (( i=0; i<${#time_hours}; i++ )); do
-  hour_value="${time_hours:$i:1}"
-  hours+=${icons[$hour_value]}
-done
-
-for (( i=0; i<${#time_minutes}; i++ )); do
-  minute_value="${time_minutes:$i:1}"
-  minutes+=${icons[$minute_value]}
-done
-
-if [ "$time_period" == "AM" ]; then
+if [ "$(date +%p)" = "AM" ]; then
   period="󰫮󱎥"
 else
   period="󰫽󱎥"
 fi
 
-time_string+=$hours
-time_string+="⋅"
-time_string+=$minutes
-time_string+="$period"
-
-echo "$time_string"
-
-# echo "$hours $minutes $period"
+echo "$(render_digits "$(date +%I)")⋅$(render_digits "$(date +%M)")$period"
