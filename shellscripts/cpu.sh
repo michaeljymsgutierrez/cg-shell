@@ -1,15 +1,7 @@
 #!/bin/bash
+# CPU usage as a percentage of total capacity across all logical cores.
 
-icons[0]="󰬹"
-icons[1]="󰬺"
-icons[2]="󰬻"
-icons[3]="󰬼"
-icons[4]="󰬽"
-icons[5]="󰬾"
-icons[6]="󰬿"
-icons[7]="󰭀"
-icons[8]="󰭁"
-icons[9]="󰭂"
+source "${BASH_SOURCE[0]%/*}/lib/icons.sh"
 
 cpu_cores=$(sysctl -n hw.logicalcpu)
 cpu_usage=$(ps -A -o %cpu | awk -v cores="$cpu_cores" '{sum+=$1} END {printf "%.0f", sum/cores}')
@@ -23,12 +15,4 @@ fi
 
 cpu_icon="#[fg=#fde466,bg=#222222,bold]󰍛#[fg=#f8f1ff,bg=#222222,bold]"
 
-percentage=""
-for (( i=0; i<${#cpu_usage}; i++ )); do
-  digit="${cpu_usage:$i:1}"
-  case $digit in
-    [0-9]) percentage+="${icons[$digit]}" ;;
-  esac
-done
-
-echo "$cpu_icon $percentage"
+echo "$cpu_icon $(render_digits "$cpu_usage")"
