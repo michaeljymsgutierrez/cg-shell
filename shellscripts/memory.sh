@@ -1,15 +1,7 @@
 #!/bin/bash
+# Memory pressure as active+wired pages against total physical memory.
 
-icons[0]="󰬹"
-icons[1]="󰬺"
-icons[2]="󰬻"
-icons[3]="󰬼"
-icons[4]="󰬽"
-icons[5]="󰬾"
-icons[6]="󰬿"
-icons[7]="󰭀"
-icons[8]="󰭁"
-icons[9]="󰭂"
+source "${BASH_SOURCE[0]%/*}/lib/icons.sh"
 
 total_mem=$(sysctl -n hw.memsize)
 page_size=$(sysctl -n hw.pagesize)
@@ -29,12 +21,4 @@ fi
 
 mem_icon="#[fg=#fde466,bg=#222222,bold]󰘚#[fg=#f8f1ff,bg=#222222,bold]"
 
-percentage=""
-for (( i=0; i<${#mem_usage}; i++ )); do
-  digit="${mem_usage:$i:1}"
-  case $digit in
-    [0-9]) percentage+="${icons[$digit]}" ;;
-  esac
-done
-
-echo "$mem_icon $percentage"
+echo "$mem_icon $(render_digits "$mem_usage")"
