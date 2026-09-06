@@ -1,122 +1,75 @@
 #!/bin/bash
+# Render a tmux window name as Nerd Font glyphs.
+#
+# Two fixes over the previous version:
+#   1. It compared an UNQUOTED $string, so any window name containing a space
+#      threw `[: ==: unary operator expected` once per space, per render.
+#   2. The lookup was a function called through command substitution inside a
+#      per-character loop - one subshell per character, per window, per tick.
+#      A case statement does the same job in-process, and folds the upper/lower
+#      pair into one branch so the tr subshell goes too.
+#
+# Unmapped characters (spaces, punctuation) are dropped, as before.
 
-raw_window_name="$1"
+raw_window_name="${1-}"
 formatted_window_name=""
 
-convert_string_to_icon() {
-  arg="$1"
-  lower_case_arg=$(echo "$arg" | tr '[:upper:]' '[:lower:]')
-  string="$lower_case_arg"
-
-  if [ $string == '1' ] ; then
-    echo "󰬺"
-  elif [ $string == '2' ] ; then
-    echo "󰬻"
-  elif [ $string == '3' ] ; then
-    echo "󰬼"
-  elif [ $string == '4' ] ; then
-    echo "󰬽"
-  elif [ $string == '5' ] ; then
-    echo "󰬾"
-  elif [ $string == '6' ] ; then
-    echo "󰬿"
-  elif [ $string == '7' ] ; then
-    echo "󰭀"
-  elif [ $string == '8' ] ; then
-    echo "󰭁"
-  elif [ $string == '9' ] ; then
-    echo "󰭂"
-  elif [ $string == '0' ] ; then
-    echo "󰬹"
-  fi
-
-  if [ $string == 'a' ] ; then
-    echo "󰫮"
-  elif [ $string == 'b' ] ; then
-    echo "󰫯"
-  elif [ $string == 'c' ] ; then
-    echo "󰫰"
-  elif [ $string == 'd' ] ; then
-    echo "󰫱"
-  elif [ $string == 'e' ] ; then
-    echo "󰫲"
-  elif [ $string == 'f' ] ; then
-    echo "󰫳"
-  elif [ $string == 'g' ] ; then
-    echo "󰫴"
-  elif [ $string == 'h' ] ; then
-    echo "󰫵"
-  elif [ $string == 'i' ] ; then
-    echo "󱂈"
-  elif [ $string == 'j' ] ; then
-    echo "󰫷"
-  elif [ $string == 'k' ] ; then
-    echo "󰫸"
-  elif [ $string == 'l' ] ; then
-    echo "󱎦"
-  elif [ $string == 'm' ] ; then
-    echo "󱎥"
-  elif [ $string == 'n' ] ; then
-    echo "󰫻"
-  elif [ $string == 'o' ] ; then
-    echo "󰬹"
-  elif [ $string == 'p' ] ; then
-    echo "󰫽"
-  elif [ $string == 'q' ] ; then
-    echo "󰫾"
-  elif [ $string == 'r' ] ; then
-    echo "󰫿"
-  elif [ $string == 's' ] ; then
-    echo "󰬀"
-  elif [ $string == 't' ] ; then
-    echo "󰬁"
-  elif [ $string == 'u' ] ; then
-    echo "󰬂"
-  elif [ $string == 'v' ] ; then
-    echo "󱂌"
-  elif [ $string == 'w' ] ; then
-    echo "󰬄"
-  elif [ $string == 'x' ] ; then
-    echo "󱂑"
-  elif [ $string == 'y' ] ; then
-    echo "󰬆"
-  elif [ $string == 'z' ] ; then
-    echo "󰬇"
-  fi
-}
-
+# Retained for future use; the call site is currently commented out below.
 add_dev_icon() {
-  arg="$1"
-  lower_case_arg=$(echo "$arg" | tr '[:upper:]' '[:lower:]')
-  string="$lower_case_arg"
-
-  if [[ $string == *"node"* ]]; then
-    echo "󰎙 "
-  elif [[ $string == *"git"* ]] ; then
-    echo "󰊢 "
-  elif [[ $string == *"ember"* ]] ; then
-    echo "󰬰 "
-  elif [[ $string == *"javascript"* ]] ; then
-    echo "󰌞 "
-  elif [[ $string == *"note"* ]] ; then
-    echo " "
-  elif [[ $string == *"vim"* ]] ; then
-    echo " "
-  elif [[ $string == *"zsh"* ]] ; then
-    echo " "
-  elif [[ $string == *"src"* ]] ; then
-    echo " "
-  elif [[ $string == *"srv"* ]] ; then
-    echo " "
-  fi
+  case "$(echo "$1" | tr '[:upper:]' '[:lower:]')" in
+    *node*)       echo "󰎙 " ;;
+    *git*)        echo "󰊢 " ;;
+    *ember*)      echo "󰬰 " ;;
+    *javascript*) echo "󰌞 " ;;
+    *note*)       echo " " ;;
+    *vim*)        echo " " ;;
+    *zsh*)        echo " " ;;
+    *src*)        echo " " ;;
+    *srv*)        echo " " ;;
+  esac
 }
 
-# formatted_window_name=$(add_dev_icon $raw_window_name)
+# formatted_window_name=$(add_dev_icon "$raw_window_name")
 
 for (( i=0; i<${#raw_window_name}; i++ )); do
-  window_name_value="${raw_window_name:$i:1}"
-  formatted_window_name+=$(convert_string_to_icon $window_name_value)
+  case "${raw_window_name:$i:1}" in
+    0)   formatted_window_name+="󰬹" ;;
+    1)   formatted_window_name+="󰬺" ;;
+    2)   formatted_window_name+="󰬻" ;;
+    3)   formatted_window_name+="󰬼" ;;
+    4)   formatted_window_name+="󰬽" ;;
+    5)   formatted_window_name+="󰬾" ;;
+    6)   formatted_window_name+="󰬿" ;;
+    7)   formatted_window_name+="󰭀" ;;
+    8)   formatted_window_name+="󰭁" ;;
+    9)   formatted_window_name+="󰭂" ;;
+    a|A) formatted_window_name+="󰫮" ;;
+    b|B) formatted_window_name+="󰫯" ;;
+    c|C) formatted_window_name+="󰫰" ;;
+    d|D) formatted_window_name+="󰫱" ;;
+    e|E) formatted_window_name+="󰫲" ;;
+    f|F) formatted_window_name+="󰫳" ;;
+    g|G) formatted_window_name+="󰫴" ;;
+    h|H) formatted_window_name+="󰫵" ;;
+    i|I) formatted_window_name+="󱂈" ;;
+    j|J) formatted_window_name+="󰫷" ;;
+    k|K) formatted_window_name+="󰫸" ;;
+    l|L) formatted_window_name+="󱎦" ;;
+    m|M) formatted_window_name+="󱎥" ;;
+    n|N) formatted_window_name+="󰫻" ;;
+    o|O) formatted_window_name+="󰬹" ;;
+    p|P) formatted_window_name+="󰫽" ;;
+    q|Q) formatted_window_name+="󰫾" ;;
+    r|R) formatted_window_name+="󰫿" ;;
+    s|S) formatted_window_name+="󰬀" ;;
+    t|T) formatted_window_name+="󰬁" ;;
+    u|U) formatted_window_name+="󰬂" ;;
+    v|V) formatted_window_name+="󱂌" ;;
+    w|W) formatted_window_name+="󰬄" ;;
+    x|X) formatted_window_name+="󱂑" ;;
+    y|Y) formatted_window_name+="󰬆" ;;
+    z|Z) formatted_window_name+="󰬇" ;;
+  esac
 done
 
 echo "$formatted_window_name"
-
