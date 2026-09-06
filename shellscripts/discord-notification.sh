@@ -1,15 +1,6 @@
 #!/bin/bash
 
-icons[0]="󰬹"
-icons[1]="󰬺"
-icons[2]="󰬻"
-icons[3]="󰬼"
-icons[4]="󰬽"
-icons[5]="󰬾"
-icons[6]="󰬿"
-icons[7]="󰭀"
-icons[8]="󰭁"
-icons[9]="󰭂"
+source "${BASH_SOURCE[0]%/*}/lib/icons.sh"
 
 unread_discord_notification=$(osascript <<'EOT'
     set discordBadge to 0
@@ -33,20 +24,23 @@ unread_discord_notification=$(osascript <<'EOT'
 EOT
 )
 
+# osascript yields an empty string when Accessibility is blocked or the app is
+# not in the Dock; [ "" -eq 0 ] throws "integer expression expected".
+case "$unread_discord_notification" in
+  ''|*[!0-9]*) unread_discord_notification=0 ;;
+esac
+
 unread_notification=""
 
-if [ $unread_discord_notification -eq 0 ]; then
+if [ "$unread_discord_notification" -eq 0 ]; then
   unread_notification="#[fg=#f8f1ff,bg=#222222,bold]#[fg=#f8f1ff,bg=#222222,bold]"
 fi
 
-if [ $unread_discord_notification -gt 0 ]; then
+if [ "$unread_discord_notification" -gt 0 ]; then
   unread_notification="#[fg=#fde466,bg=#222222,bold]#[fg=#f8f1ff,bg=#222222,bold]"
 fi
 
-for (( i=0; i<${#unread_discord_notification}; i++ )); do
-  notification_value="${unread_discord_notification:$i:1}"
-  unread_notification+=${icons[$notification_value]}
-done
+unread_notification+=$(render_digits "$unread_discord_notification")
 
 echo "$unread_notification"
 
