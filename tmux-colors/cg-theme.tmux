@@ -15,30 +15,44 @@ set -g status-justify "left"
 set -g status-style "fg=$pane_text_color,bg=$pane_background_color"
 set -g status-left-length "190"
 set -g status-right-length "100"
-set -g status-interval 3
+# Nothing on the bar is finer-grained than a minute (the clock renders %I/%M,
+# never seconds), so a 3s tick was re-running every probe for no visible gain.
+set -g status-interval 5
 set -g status-left-style NONE
 set -g status-right-style NONE
 
 # Section contents
-display_time='#(bash -c ~/cg-shell/shellscripts/time.sh)'
-display_date='#(bash -c ~/cg-shell/shellscripts/date.sh)'
+#
+# `#()` already forks a shell, so the old `bash -c` wrapper was a second,
+# pointless fork+exec per segment per tick. Every script is executable with a
+# shebang, so it is called directly now.
+#
+# The five notification counters each spawn an AppleScript runtime and walk the
+# Dock's Accessibility tree (measured 0.10-0.24s apiece, all firing on the same
+# tick). They go through lib/cached.sh, which serves the last value instantly and
+# refreshes in the background, so they never sit on the critical path. Badge
+# counts do not meaningfully change faster than the 15s TTL.
+display_time='#(~/cg-shell/shellscripts/time.sh)'
+display_date='#(~/cg-shell/shellscripts/date.sh)'
 display_datetime="$display_time $display_date"
-display_system_notification_count='#(bash -c ~/cg-shell/shellscripts/system-notification-count.sh)'
-display_calendar_notification_count='#(bash -c ~/cg-shell/shellscripts/calendar-notification-count.sh)'
-display_mail_notification_count='#(bash -c ~/cg-shell/shellscripts/mail-notification-count.sh)'
-display_discord_notification_count='#(bash -c ~/cg-shell/shellscripts/discord-notification.sh)'
-display_slack_notification_count='#(bash -c ~/cg-shell/shellscripts/slack-notification-count.sh)'
-display_battery_status='#(bash -c ~/cg-shell/shellscripts/battery.sh)'
-display_network_status='#(bash -c ~/cg-shell/shellscripts/network.sh)'
-display_earth_status='#(bash -c ~/cg-shell/shellscripts/earth.sh)'
-display_cpu_status='#(bash -c ~/cg-shell/shellscripts/cpu.sh)'
-display_memory_status='#(bash -c ~/cg-shell/shellscripts/memory.sh)'
+display_system_notification_count='#(~/cg-shell/shellscripts/lib/cached.sh 15 system-notification-count.sh)'
+display_calendar_notification_count='#(~/cg-shell/shellscripts/lib/cached.sh 15 calendar-notification-count.sh)'
+display_mail_notification_count='#(~/cg-shell/shellscripts/lib/cached.sh 15 mail-notification-count.sh)'
+display_discord_notification_count='#(~/cg-shell/shellscripts/lib/cached.sh 15 discord-notification.sh)'
+display_slack_notification_count='#(~/cg-shell/shellscripts/lib/cached.sh 15 slack-notification-count.sh)'
+display_battery_status='#(~/cg-shell/shellscripts/battery.sh)'
+display_network_status='#(~/cg-shell/shellscripts/network.sh)'
+display_earth_status='#(~/cg-shell/shellscripts/earth.sh)'
+display_cpu_status='#(~/cg-shell/shellscripts/cpu.sh)'
+display_memory_status='#(~/cg-shell/shellscripts/memory.sh)'
 
 display_left_section_content="$display_network_status "
 display_right_section_content="$display_mail_notification_count $display_calendar_notification_count $display_slack_notification_count $display_discord_notification_count $display_cpu_status $display_memory_status $display_battery_status $display_earth_status $display_datetime $display_system_notification_count"
 
 
-window_name="#(bash -c '~/cg-shell/shellscripts/iconize-string.sh #W')"
+# #W is quoted so a window name containing a space arrives as ONE argument
+# rather than being word-split across the script's parameters.
+window_name="#(~/cg-shell/shellscripts/iconize-string.sh '#W')"
 
 display_left_section="$display_left_section_content"
 display_right_section="$display_right_section_content"
