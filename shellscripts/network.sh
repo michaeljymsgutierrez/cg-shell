@@ -1,24 +1,67 @@
-#! /bin/bash
+#!/bin/bash
+# Network reachability indicator.
+#
+# The probe is cached and refreshed in the background; only the spinner advances
+# on every tick. The previous version ran a bare `ping -c 2 google.com` inline
+# with no timeout, which cost a measured 1.02s on a good connection and blocked
+# for a measured 12s against an unroutable host - against a status-interval of
+# 3s, so a wifi drop left four ping jobs overlapping. `-t 2` now caps the probe,
+# and the cache keeps it off the tick entirely.
 
-connecting_icons=("󰤟" "󰤢" "󰤥")
 connected_icons=("󰤡" "󰤤" "󰤧" "󰤪")
 disconnected_icons=("󰤠" "󰤣" "󰤦" "󰤩")
 
-STATE_FILE="/tmp/net_progress_index"
+state_file="/tmp/net_progress_index"
+cache_file="${TMPDIR:-/tmp}/cg-status-network-state.cache"
+lock_dir="$cache_file.lock"
+ttl=15
 
-index=$(cat "$STATE_FILE" 2>/dev/null || echo 0)
+now=$(date +%s)
 
-if ping -c 2 google.com > /dev/null ; then
-  current_icon="${connected_icons[$index]}"
-  output="#[fg=#fde466,bg=#222222,bold]$current_icon #[fg=#f8f1ff,bg=#222222,bold]󰫰󰫻"
+probe() {
+  # -t bounds the whole operation. Without it an unroutable host hangs ~12s.
+  if ping -c 1 -t 2 google.com >/dev/null 2>&1; then
+    echo up
+  else
+    echo down
+  fi
+}
+
+if [ ! -s "$cache_file" ]; then
+  # Cold: probe once so the first render is truthful rather than guessing.
+  probe > "$cache_file" 2>/dev/null
 else
-  current_icon="${disconnected_icons[$index]}"
-  output="#[fg=#fa618d,bg=#222222,bold]$current_icon #[fg=#f8f1ff,bg=#222222,bold]󰫱󰫰"
+  mtime=$(stat -f %m "$cache_file" 2>/dev/null || echo 0)
+  if [ $(( now - mtime )) -ge "$ttl" ]; then
+    if [ -d "$lock_dir" ]; then
+      lock_mtime=$(stat -f %m "$lock_dir" 2>/dev/null || echo 0)
+      [ $(( now - lock_mtime )) -gt 60 ] && rmdir "$lock_dir" 2>/dev/null
+    fi
+    # Atomic lock: at most one probe in flight, so probes can never stack.
+    if mkdir "$lock_dir" 2>/dev/null; then
+      (
+        trap 'rmdir "$lock_dir" 2>/dev/null' EXIT
+        probe > "$cache_file.tmp" 2>/dev/null && mv -f "$cache_file.tmp" "$cache_file"
+      ) </dev/null >/dev/null 2>&1 &
+    fi
+  fi
 fi
 
-next_index=$(( (index + 1) % 4 ))
+network_state=$(cat "$cache_file" 2>/dev/null)
 
-echo "$next_index" > "$STATE_FILE"
+index=$(cat "$state_file" 2>/dev/null || echo 0)
+# Guard a missing or corrupted state file before using it as an array index.
+case "$index" in
+  ''|*[!0-9]*) index=0 ;;
+esac
+[ "$index" -ge "${#connected_icons[@]}" ] && index=0
+
+if [ "$network_state" = "up" ]; then
+  output="#[fg=#fde466,bg=#222222,bold]${connected_icons[$index]} #[fg=#f8f1ff,bg=#222222,bold]󰫰󰫻"
+else
+  output="#[fg=#fa618d,bg=#222222,bold]${disconnected_icons[$index]} #[fg=#f8f1ff,bg=#222222,bold]󰫱󰫰"
+fi
+
+echo $(( (index + 1) % ${#connected_icons[@]} )) > "$state_file"
 
 echo "$output"
-
