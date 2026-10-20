@@ -82,9 +82,15 @@ alias gpl="git_pull"
 
 function git_push {
   branch=$(git branch --show-current)
-  echo "git push origin $branch" | bash
+  echo "git push -u origin $branch" | bash
 }
 alias gps="git_push"
+
+function git_push_no_verify {
+  branch=$(git branch --show-current)
+  echo "git push -u origin $branch --no-verify" | bash
+}
+alias gpn="git_push_no_verify"
 
 # DEPRECATED ALIASES
 # alias sysupdate="sudo apt-get update"
